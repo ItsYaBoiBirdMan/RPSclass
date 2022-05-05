@@ -1,7 +1,7 @@
-var WIDTH = 200;
-var HEIGHT = 100;
-var POSX = 10;
-var POSY = 10;
+const WIDTH = 200;
+const HEIGHT = 100;
+const POSX = 10;
+const POSY = 10;
 
 class ScoreBoard {
     constructor(playerName, opponentName,playerHP, opponentHP ) {
