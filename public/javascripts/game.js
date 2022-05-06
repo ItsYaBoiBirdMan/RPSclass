@@ -1,8 +1,7 @@
-let matchId = 1;
-let playerId = 1;
-let opponentId = 2;
+let playerMatchId = 1;
+let opponentMatchId = 2;
 
 window.onload = async function() {
-    
+
 }
 
