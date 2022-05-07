@@ -12,6 +12,13 @@ class ScoreBoard {
         this.pState = playerState;
         this.oState = opponentState;
     }
+    getPlayerState() {
+        return this.pState;
+    }
+    getOpponentState() {
+        return this.pState;
+    }
+
     draw() {
         fill(100,200,100);
         stroke(0,0,0);
