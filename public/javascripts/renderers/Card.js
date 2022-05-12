@@ -3,7 +3,7 @@ const CHEIGHT = 120;
 
 class Card {
     constructor(id,name, hp, attacked, x, y) {
-        this.id=id;
+        this.id = id;
         this.name = name;
         this.hp = hp;
         this.x = x;

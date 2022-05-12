@@ -1,5 +1,57 @@
 var pool = require('./connection.js')
 
+// pmId, deckId
+// match has ended -- later
+// pm is on a state that can play the card
+// pm owns the deck card
+// deck card is on the hand
+
+module.exports.getPlayerDeckCard = async function (pmId, deckId) {
+    try {
+        let sqlDeck = `Select * from deck
+                        where deck_id = $1 and deck_pm_id = $2`
+        let res = await pool.query(sqlDeck, [deckId, pmId]);
+        if (res.rows.length > 0) {
+            return {status: 200, result : res.rows[0]}
+        } else {
+            return { status: 400, result: {msg: "The player does not own that card"} }
+        }
+    } catch (err) {
+        console.log(err);
+        return { status: 500, result: err };
+    }    
+}
+
+
+module.exports.playCard = async function (pmId, deckId) {
+    try{
+
+        let res = await this.getPlayerMatchInfo(pmId);
+        if (res.status != 200) return res;
+        let player = res.result;
+        if (player.pm_state_id != 1) 
+            return { status: 400, result:{msg: "Cannot play a card at this moment"}};
+        res = await this.getPlayerDeckCard(pmId, deckId)
+        if (res.status != 200) return res
+        let playerCard = res.result
+        if (playerCard.deck_pos_id != 1)
+            return { status: 400, result:{ msg: "That card is not on the hand to be played"}}
+
+        let sqlUpCard = `update deck set deck_pos_id = 3
+                         where deck_id = $1`
+        await pool.query(sqlUpCard, [deckId])
+
+        let sqlUpPlayerState = `update playermatch set pm_state_id = 2
+                         where pm_id = $1`
+        await pool.query(sqlUpPlayerState, [pmId])
+        return { status: 200, result: {msg: "Card was succesfully played on the table"}}
+
+    } catch (err) {
+      console.log(err);
+      return { status: 500, result: err };
+    }    
+}
+
 module.exports.getPlayerDeck = async function (pId,pmId) { 
     try {
         let sqlCheck = `select * from playermatch where pm_player_id = $1 and pm_id = $2`;
